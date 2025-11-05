@@ -34,9 +34,11 @@ jobs:
 
       - name: Build APK
         run: |
-          ./gradlew clean assemble${{ matrix.buildType^ }} \
-            -PabiFilters=${{ matrix.abi }} \
-            --stacktrace --no-daemon
+          if [ "${{ matrix.buildType }}" = "debug" ]; then
+            ./gradlew clean assembleDebug -PabiFilters=${{ matrix.abi }} --stacktrace --no-daemon
+          else
+            ./gradlew clean assembleRelease -PabiFilters=${{ matrix.abi }} --stacktrace --no-daemon
+          fi
 
       - name: Find built APK
         id: find_apk
